@@ -36,7 +36,8 @@ module.exports = {
       repo: 'git@github.com:AleonaKS/nodejs-pm2-deploy.git',
       path: '/home/user/nodejs-pm2-deploy',
       'pre-deploy': 'git fetch --all',
-      'post-deploy': 'cd backend && npm run build && cd .. && npm install --omit=dev && pm2 reload ecosystem.config.js --env production'
+      'post-deploy': 'cd backend && npm ci && npm run build && cd .. && pm2 reload ecosystem.config.js --env production'
+
     }
   }
 };
