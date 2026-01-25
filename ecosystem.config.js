@@ -14,18 +14,22 @@ module.exports = {
     }
   }, {
     name: 'frontend',
-    script: './frontend/server.js',
+    script: 'npm',
+    args: 'start',  
+    cwd: './frontend', 
     instances: 1,
     autorestart: true,
     watch: false,
     max_memory_restart: '1G',
     env: {
       NODE_ENV: 'development',
-      PORT: 3001
+      PORT: 3001,
+      BROWSER: 'none'  
     },
     env_production: {
       NODE_ENV: 'production',
-      PORT: 3001
+      PORT: 3001,
+      BROWSER: 'none'
     }
   }],
   deploy: {
@@ -36,8 +40,7 @@ module.exports = {
       repo: 'git@github.com:AleonaKS/nodejs-pm2-deploy.git',
       path: '/home/user/nodejs-pm2-deploy',
       'pre-deploy': 'git fetch --all',
-      'post-deploy': 'npm install && cd backend && npm install && npm run build && cd .. && pm2 reload ecosystem.config.js --env production'
-
+      'post-deploy': 'npm install && cd backend && npm install && npm run build && cd ../frontend && npm install && npm run build && cd .. && pm2 reload ecosystem.config.js --env production'
     }
   }
 };
