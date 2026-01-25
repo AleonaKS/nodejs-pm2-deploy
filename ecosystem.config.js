@@ -29,7 +29,7 @@ module.exports = {
       repo: 'git@github.com:AleonaKS/nodejs-pm2-deploy.git', // из .env.deploy
       path: '/home/user/nodejs-pm2-deploy', // из .env.deploy
       'pre-deploy': 'git fetch --all',
-      'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env production'
+      'post-deploy': 'npm install --production && pm2 reload ecosystem.config.js --env production'
     }
   }
 };
