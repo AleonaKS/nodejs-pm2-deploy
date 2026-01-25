@@ -11,10 +11,9 @@ module.exports = {
         DB_ADDRESS: 'mongodb://localhost:27017/mesto',
         JWT_SECRET: process.env.JWT_SECRET || 'fallback-secret-key-123',
       },
-      
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
       merge_logs: true,
-      watch: false, 
+      watch: false,
       max_restarts: 10,
       restart_delay: 1000,
     },
@@ -38,15 +37,25 @@ module.exports = {
       ref: 'origin/master',
       repo: 'git@github.com:AleonaKS/nodejs-pm2-deploy.git',
       path: '/home/user/nodejs-pm2-deploy',
-      'pre-deploy': 'echo "Pre-deploy: pulling latest code..."',
+      'pre-deploy': 'echo "Starting deployment..."',
       'post-deploy': `
-        npm install &&
-        cd backend &&
-        npm run build &&
-        pm2 reload ecosystem.config.js --env production &&
-        echo "Deployment completed successfully!"
-      `,
-      'post-setup': 'cd /home/user/nodejs-pm2-deploy && npm install',
+  cd /home/user/nodejs-pm2-deploy/current &&
+  npm install &&
+  
+  # Сборка бэкенда
+  cd backend && npm run build && cd .. &&
+  
+  # Сборка фронтенда  
+  cd frontend && npm install && npm run build && cd .. &&
+  
+  # Перезапуск
+  pm2 delete backend frontend 2>/dev/null || true &&
+  pm2 start ecosystem.config.js --env production &&
+  
+  echo " Deployment completed successfully!"
+`,
+
+      'pre-setup': 'echo "Setting up deployment environment..."',
     },
   },
 };
