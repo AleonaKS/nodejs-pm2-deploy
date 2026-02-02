@@ -8,3 +8,5 @@ dist/
 .vscode/
 logs/
 npm-debug.log*
+.env.prod
+.env.prod
