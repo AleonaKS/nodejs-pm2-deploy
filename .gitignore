@@ -1,5 +1,10 @@
-.idea
-node_modules
-*.log
-build.env
+# Node.js и деплой-файлы
+node_modules/
+.env
 .env.deploy
+dist/
+
+# Дополнительно: IDE, логи, сборки
+.vscode/
+logs/
+npm-debug.log*
