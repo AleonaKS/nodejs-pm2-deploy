@@ -45,7 +45,12 @@ module.exports = {
       ref: DEPLOY_REF,
       repo: DEPLOY_REPO,
       path: DEPLOY_PATH,
-      'post-deploy': 'cd $DEPLOY_PATH && npm install && cd backend && npm run build && pm2 reload ecosystem.config.js --env production',
+      'post-deploy': `
+  cd $DEPLOY_PATH/source/backend &&
+  npm install &&
+  npm run build &&
+  pm2 reload $DEPLOY_PATH/ecosystem.config.js --env production
+`,
     },
   },
 };
