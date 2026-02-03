@@ -41,11 +41,11 @@ module.exports = {
 
   deploy: {
     production: {
-      user: process.env.DEPLOY_USER || 'user',
-      host: process.env.DEPLOY_HOST || '158.160.210.113',
-      ref: process.env.DEPLOY_REF || 'main',
-      repo: process.env.DEPLOY_REPO || 'git@github.com/AleonaKS/nodejs-pm2-deploy.git',
-      path: process.env.DEPLOY_PATH || '/home/user/nodejs-pm2-deploy',
+    user: process.env.DEPLOY_USER,
+    host: process.env.DEPLOY_HOST,
+    ref: process.env.DEPLOY_REF,
+    repo: process.env.DEPLOY_REPO,
+    path: process.env.DEPLOY_PATH,
       'pre-deploy': 'git fetch --all',
       'post-deploy': `
         export NODE_OPTIONS=--openssl-legacy-provider &&
