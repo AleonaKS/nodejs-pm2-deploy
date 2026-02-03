@@ -38,19 +38,26 @@ module.exports = {
     },
   ],
 
+
   deploy: {
     production: {
-      user: DEPLOY_USER,
-      host: DEPLOY_HOST,
-      ref: DEPLOY_REF,
-      repo: DEPLOY_REPO,
-      path: DEPLOY_PATH,
+      user: process.env.DEPLOY_USER || 'user',
+      host: process.env.DEPLOY_HOST || '127.0.0.1',
+      ref: process.env.DEPLOY_REF || 'main',
+      repo: process.env.DEPLOY_REPO || 'git@github.com/AleonaKS/nodejs-pm2-deploy.git',
+      path: process.env.DEPLOY_PATH || '/home/user/nodejs-pm2-deploy',
+      'pre-deploy': 'git fetch --all',
       'post-deploy': `
-  cd $DEPLOY_PATH/source/backend &&
-  npm install &&
-  npm run build &&
-  pm2 reload $DEPLOY_PATH/ecosystem.config.js --env production
-`,
-    },
+        export NODE_OPTIONS=--openssl-legacy-provider &&
+        npm install &&
+        cd backend &&
+        npm install &&
+        npm run build &&
+        cd ../frontend &&
+        npm install &&
+        npm run build &&
+        pm2 reload ecosystem.config.js --env production
+      `
+    }
   },
 };
