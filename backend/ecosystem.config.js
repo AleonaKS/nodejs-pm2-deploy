@@ -1,0 +1,43 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '..', '.env.deploy') });
+
+const USER = process.env.DEPLOY_USER;
+const HOST = process.env.HOST;
+const REPO = process.env.REPO;
+const BRANCH = process.env.BRANCH;
+const BACKEND_PATH = process.env.DEPLOY_BACKEND_PATH;
+const KEY = process.env.KEY;
+
+module.exports = {
+  apps: [
+    {
+      name: 'backend',
+      script: './dist/app.js',
+      instances: 1,
+      exec_mode: 'fork',
+      watch: false,
+      max_memory_restart: '1G',
+      env_production: {
+        NODE_ENV: 'production'
+      }
+    }
+  ],
+
+  deploy: {
+    production: {
+      user: USER,
+      host: HOST,
+      ref: BRANCH,
+      repo: REPO,
+      path: BACKEND_PATH,
+      key: KEY,
+      ssh_options: 'StrictHostKeyChecking=no',
+      'pre-deploy': 'git fetch --all',
+      'pre-deploy-local': `scp -i ${KEY} -o IdentitiesOnly=yes ../.env.deploy ${USER}@${HOST}:${BACKEND_PATH}/current/backend/.env`,
+      'post-deploy': [
+        `cd ${BACKEND_PATH}/current/backend && npm install && npm run build`,
+        `pm2 startOrReload ecosystem.config.js --only backend --env production`
+      ].join(' && ')
+    }
+  }
+};
