@@ -42,7 +42,7 @@ module.exports = {
   deploy: {
     production: {
       user: process.env.DEPLOY_USER || 'user',
-      host: process.env.DEPLOY_HOST || '127.0.0.1',
+      host: process.env.DEPLOY_HOST || '158.160.210.113',
       ref: process.env.DEPLOY_REF || 'main',
       repo: process.env.DEPLOY_REPO || 'git@github.com/AleonaKS/nodejs-pm2-deploy.git',
       path: process.env.DEPLOY_PATH || '/home/user/nodejs-pm2-deploy',
