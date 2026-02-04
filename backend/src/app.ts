@@ -11,8 +11,8 @@ import routes from './routes';
 
 const { PORT = 3000 } = process.env;
 const app = express();
-
 mongoose.connect(DB_ADDRESS);
+
 
 const corsOptions = {
   origin: 'https://student.nomorepartiessbs.ru',
@@ -20,24 +20,23 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
-app.options('*', cors(corsOptions));  
-
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.get('/crash-test', (_req, _res) => {
+app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
 
 app.use(routes);
-
 app.use(errors());
-
 app.use(errorHandler);
 
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
