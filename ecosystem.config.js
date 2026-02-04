@@ -1,5 +1,5 @@
 const path = require('path');
-require('dotenv').config(); // Используем стандартный .env
+require('dotenv').config();
 
 module.exports = {
   apps: [{
@@ -9,7 +9,9 @@ module.exports = {
     exec_mode: 'fork',
     env: {
       NODE_ENV: 'production',
-      PORT: 5000
+      PORT: 5000,
+      DB_ADDRESS: process.env.DB_ADDRESS,
+      JWT_SECRET: process.env.JWT_SECRET
     }
   }],
 
