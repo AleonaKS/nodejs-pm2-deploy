@@ -1,38 +1,35 @@
+const path = require('path');
+require('dotenv').config(); // Используем стандартный .env
+
 module.exports = {
   apps: [{
-    name: 'nodejs-app',
-    script: './dist/app.js',  
+    name: 'backend',
+    script: './backend/dist/app.js',
     instances: 1,
-    autorestart: true,
-    watch: false,
-    max_memory_restart: '1G',
-    
-    
+    exec_mode: 'fork',
     env: {
-      NODE_ENV: 'development',
-      PORT: 3000,
-      DB_ADDRESS: process.env.DB_ADDRESS,    
-      JWT_SECRET: process.env.JWT_SECRET,   
-    },
-    env_production: {
       NODE_ENV: 'production',
-      PORT: process.env.PORT,
-      DB_ADDRESS: process.env.DB_ADDRESS,
-      JWT_SECRET: process.env.JWT_SECRET,
+      PORT: 5000
     }
   }],
-  
- 
+
   deploy: {
     production: {
       user: process.env.DEPLOY_USER,
-      host: process.env.DEPLOY_HOST,
-      ref: process.env.DEPLOY_REF,
-      repo: process.env.DEPLOY_REPO,
+      host: process.env.HOST,
+      ref: process.env.BRANCH || 'main',
+      repo: process.env.REPO,
       path: process.env.DEPLOY_PATH,
-      key: process.env.DEPLOY_KEY,
-      'pre-deploy': 'git fetch --all',
-      'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env production'
+      'key': process.env.KEY_PATH,
+      'ssh_options': ['StrictHostKeyChecking=no'],
+      'pre-deploy-local': '',
+      'post-deploy': `
+        cd backend && 
+        npm ci && 
+        npm run build && 
+        pm2 startOrReload ../ecosystem.config.js --env production
+      `,
+      'pre-setup': 'echo "Starting deployment..."'
     }
   }
 };
