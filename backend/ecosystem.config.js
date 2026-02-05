@@ -1,11 +1,10 @@
-const dotenv = require('dotenv');
-dotenv.config({ path: "./.env.deploy" });
+require('dotenv').config({ path: './backend/.env.deploy' });
 
 const {  DEPLOY_USER, DEPLOY_HOST, DEPLOY_PATH, DEPLOY_REF, DEPLOY_REPO } = process.env;
 
 module.exports = {
   apps: [{
-    namme: 'mesto',
+    name: 'mesto',
     script: './dist/app.js',
   }],
 
