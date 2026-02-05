@@ -1,2 +1,2 @@
-export const JWT_SECRET = process.env.JWT_SECRET
-export const DB_ADDRESS = process.env.DB_ADDRESS 
+export const { JWT_SECRET = 'JWT_SECRET' } = process.env;
+export const { DB_ADDRESS = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
