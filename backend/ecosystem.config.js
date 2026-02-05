@@ -1,26 +1,24 @@
+const dotenv = require('dotenv');
+dotenv.config({ path: "./.env.deploy" });
+
+const {  DEPLOY_USER, DEPLOY_HOST, DEPLOY_PATH, DEPLOY_REF, DEPLOY_REPO } = process.env;
+
 module.exports = {
   apps: [{
-    name: 'nodejs-app',
-    script: './backend/dist/app.js',
-    user: process.env.DEPLOY_USER,      
-    cwd: process.env.DEPLOY_PATH, 
-    env: {
-      NODE_ENV: 'development',
-      DB_ADDRESS: process.env.DB_ADDRESS,    
-      JWT_SECRET: process.env.JWT_SECRET,   
-    },
-    env_production: {
-      NODE_ENV: 'production',
-      PORT: 80,
-      DB_ADDRESS: process.env.DB_ADDRESS,
-      JWT_SECRET: process.env.JWT_SECRET,
-    },
-    deploy: {
-      ref: process.env.DEPLOY_REF,          
-      repo: process.env.DEPLOY_REPO,      
-      key: process.env.DEPLOY_KEY,    
-      'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env production'
-    }
-  }]
-};
+    namme: 'mesto',
+    script: './dist/app.js',
+  }],
 
+  // Настройка деплоя
+  deploy: {
+    production: {
+      user: DEPLOY_USER,
+      host: DEPLOY_HOST,
+      ref: DEPLOY_REF,
+      repo: DEPLOY_REPO,
+      path: DEPLOY_PATH,
+      'pre-deploy': `bash scripts/deployEnv.sh ${DEPLOY_USER}@${DEPLOY_HOST} ${DEPLOY_PATH}`,
+      'post-deploy': 'cd backend && pwd && npm ci && npm i && npm run build && pm2 startOrRestart ecosystem.config.js -- env production',
+    },
+  },
+};
